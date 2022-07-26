@@ -81,18 +81,6 @@ resource "azurerm_lb_nat_pool" "vmss"{
   backend_port = 22
   protocol = "Tcp"
 }
-resource "azurerm_lb_nat_rule" "vmss" {
-  resource_group_name            = azurerm_resource_group.vmss.name
-  loadbalancer_id                = azurerm_lb.vmss.id
-  name                           = "natrule"
-  protocol                       = "Tcp"
-  frontend_port           = 55000
-  # frontend_port_end              = 50010
-  backend_port                   = 22
-  # backend_address_pool_id       = azurerm_lb_backend_address_pool.bpepool.id
-  frontend_ip_configuration_name = "PublicIPAddress"
-}
-
 resource "azurerm_network_security_group" "vmss"{
   name = "${var.resource_group_name}-nsg"
   location = azurerm_resource_group.vmss.location
@@ -112,11 +100,6 @@ resource "azurerm_network_interface" "vmss" {
 resource "azurerm_network_interface_security_group_association" "vmss" {
   network_interface_id      = azurerm_network_interface.vmss.id
   network_security_group_id = azurerm_network_security_group.vmss.id
-}
-resource "azurerm_network_interface_nat_rule_association" "vmss" {
-  network_interface_id  = azurerm_network_interface.vmss.id
-  ip_configuration_name = "internal"
-  nat_rule_id           = azurerm_lb_nat_rule.vmss.id
 }
 resource "azurerm_network_security_rule" "rule1" {
   name                        = "HTTP"
