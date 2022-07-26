@@ -11,9 +11,6 @@ terraform {
 provider "azurerm" {
   features {}
 }
-locals {
-  first_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN you@me.com"
-}
 
 resource "azurerm_resource_group" "vmss" {
  name     = var.resource_group_name
@@ -138,7 +135,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   admin_username                  = var.admin_user
   admin_ssh_key {
     username   = "azureuser"
-    public_key = local.first_public_key
+    public_key =  file("~/.ssh/id_rsa.pub")
   }
 
   source_image_id = "/subscriptions/51312ad3-a484-480b-a217-075484b1dfd9/resourceGroups/VM-Image/providers/Microsoft.Compute/images/temporary-vm-image-20220712111815"
